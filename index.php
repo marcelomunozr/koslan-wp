@@ -1,66 +1,66 @@
 <?php get_header(); ?>
 
-<div class="row">
 
-	<div class="col-md-8">
-
-		<?php if(have_posts()) : ?>
-		   <?php while(have_posts()) : the_post(); ?>
-			<div id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-				<?php the_title('<h2>','</h2>'); ?>
-		 		<?php the_content(); ?>
-			</div>
+	<div class="productos-contain-homi">
+		<div class="row">
 			<?php
-			if (is_singular()) {
-				// support for pages split by nextpage quicktag
-				wp_link_pages();
-
-				if ( comments_open() || get_comments_number() ) :
-					comments_template();
-				endif;
-
-				// Previous/next post navigation.
-				the_post_navigation( array(
-					'next_text' => '<span class="meta-nav" aria-hidden="true">' . __( 'Next', 'twentyfifteen' ) . '</span> ' .
-						'<span class="screen-reader-text">' . __( 'Next post:', 'twentyfifteen' ) . '</span> ' .
-						'<span class="post-title">%title</span>',
-					'prev_text' => '<span class="meta-nav" aria-hidden="true">' . __( 'Previous', 'twentyfifteen' ) . '</span> ' .
-						'<span class="screen-reader-text">' . __( 'Previous post:', 'twentyfifteen' ) . '</span> ' .
-						'<span class="post-title">%title</span>',
-				) );
-
-				// tags anyone?
-				the_tags();
+			$query = new WP_Query( array( 'post_type' => 'productos', 'posts_per_page' => 5));
+			if ($query->have_posts() ) {
+			    while ( $query->have_posts() ) { 
+		            $query->the_post();?>
+		            <div class="col-five">
+	                	<a href="<?php the_permalink();?>">
+		                	<?php the_post_thumbnail('productos', array('class' => 'img-responsive img-center', 'title' => get_the_title()));?>
+		                </a>
+		            </div>
+			    <?php
+			    }
+			    wp_reset_postdata();
 			}
 			?>
-		   <?php endwhile; ?>
-
-		<?php if (!is_singular()) : ?>
-			<div class="nav-previous alignleft"><?php next_posts_link( 'Older posts' ); ?></div>
-			<div class="nav-next alignright"><?php previous_posts_link( 'Newer posts' ); ?></div>
-		<?php endif; ?>
-
-		<?php else : ?>
-
-		<div class="alert alert-info">
-		  <strong>No content in this loop</strong>
 		</div>
-
-		<?php endif; ?>
 	</div>
-
-	<div class="col-md-4">
-
-		<?php
-		 if (!function_exists('dynamic_sidebar') || !dynamic_sidebar('Sidebar')) : //  Sidebar name
-		?>
-		<?php
-		     endif;
-		?>
-	</div>
-
 </div>
-
+<div class="industrias-contain-home">
+	<div class="container indus">
+		<?php
+		$query = new WP_Query( array( 'post_type' => 'industrias', 'posts_per_page' => 5));
+		if ($query->have_posts() ) {
+		    while ( $query->have_posts() ) { 
+	            $query->the_post();?>
+				<div class="col-five color-<?php echo get_field('color');?>">
+					<h4><?php the_title(); ?></h4>
+	                <a href="<?php the_permalink();?>">
+	                	<?php the_post_thumbnail('infustrias', array('class' => 'img-responsive img-center', 'title' => get_the_title()));?>
+	                </a>
+	            </div>
+		    <?php
+		    }
+		    wp_reset_postdata();
+		}
+		?>
+		<div class="col-one">
+			<h4>Marcas</h4>
+			<?php 
+				$taxonomy = "marca";
+				$terms = get_terms($taxonomy, array(
+					"orderby"    => "count",
+					"hide_empty" => false
+				));
+				$i = 0;
+			?>
+			<?php foreach ($terms as $term): ?>
+				<?php if ($i==0): ?>
+					<div class="">
+						<img src="<?php echo get_field('logo',$term); ?>" alt="<?php echo $term->name; ?>" class="img-responsive img-cate img-center">
+		            </div>
+				<?php endif ?>
+				<?php $i++; ?>
+			<?php endforeach ?>
+		</div>
+	</div>
+</div>
+<div class="container">
 
 
 

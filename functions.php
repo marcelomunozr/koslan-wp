@@ -3,6 +3,9 @@
 
 //Add thumbnail, automatic feed links and title tag support
 add_theme_support( 'post-thumbnails' );
+add_image_size('home', 1920, 400, array( 'center', 'center' ) );
+add_image_size('producto-home', 300, 300, array( 'center', 'center' ) );
+add_image_size('industrias', 400, 400, array( 'center', 'center' ) );
 add_theme_support( 'automatic-feed-links' );
 add_theme_support( 'title-tag' );
 
@@ -20,6 +23,15 @@ if ( function_exists( 'register_nav_menus' ) ) {
   	);
 }
 
+//Page Slug Body Class
+function add_slug_body_class( $classes ) {
+  global $post;
+  if ( isset( $post ) ) {
+    $classes[] = $post->post_type . '-' . $post->post_name;
+  }
+  return $classes;
+}
+add_filter( 'body_class', 'add_slug_body_class' );
 
 // filter the Gravity Forms button type
 add_filter('gform_submit_button', 'form_submit_button', 10, 2);
@@ -390,5 +402,17 @@ function bootstrap_theme_enqueue_scripts() {
 }
 
 add_action( 'wp_enqueue_scripts', 'bootstrap_theme_enqueue_scripts', 1 );
+
+
+if( function_exists('acf_add_options_page') ) {
+  acf_add_options_page(array(
+    'page_title'  => 'Opciones del Sitio',
+    'menu_title'  => 'Opciones del Sitio',
+    'menu_slug'   => 'theme-general-settings',
+    'capability'  => 'edit_posts',
+    'redirect'    => false
+  ));
+}
+
 
 ?>
